@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  directUrl         = env("DIRECT_URL")
+}
+
+
+model User{
+  id        String  @id @unique
+  email     String  @unique
+  firstName      String
+  lastName       String
+  profileImage  String
+
+
+  Course Course[]
+}
+
+//2:18:00
+
+model Course{
+  id        String  @id @default(cuid())
+  name    String
+  price  Int
+  smallDescription String
+  description Json
+  images String[]
+  courseFile String
+  category CategoryTypes
+  textColor        String
+  backgroundColor  String
+  buttonColor      String
+  createdAt DateTime @default(now())
+  User User? @relation(fields: [UserId], references: [id])
+  UserId String?
+}
+
+
+enum CategoryTypes{
+  creativearts
+  business
+  tech
+}
