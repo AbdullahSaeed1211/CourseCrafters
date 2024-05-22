@@ -13,29 +13,29 @@ import { Label } from "@/components/ui/label";
 import SelectCategory from "../components/SelectCategory";
 import { TipTapEditor } from "../components/Editor";
 import { UploadDropzone } from "@/app/lib/uploadthing";
-import { Button } from "@/components/ui/button";
 import Theme from "../components/Theme";
 import { useEffect, useState } from "react";
 import { JSONContent } from "@tiptap/react";
 import { useFormState } from "react-dom";
-import { SellProduct, State } from "../actions";
+import { SellCourse, State } from "../actions";
 import { toast } from "sonner";
+import SubmitButton from "../components/SubmitButton";
 
 export default function Page() {
   const initialState: State = {
     status: undefined,
     message: "",
   };
-  const [state, formAction] = useFormState(SellProduct, initialState);
+  const [state, formAction] = useFormState(SellCourse, initialState);
   const [json, setJson] = useState<null | JSONContent>(null);
   const [images, setImages] = useState<null | string[]>(null);
-  const [productFile, SetProductFile] = useState<null | string>(null);
+  const [courseFile, SetCourseFile] = useState<null | string>(null);
   console.log(state?.errors);
 
   useEffect(() => {
     if (state.status === "success") {
       toast.success(state.message);
-    }else if(state.status === "error"){
+    } else if (state.status === "error") {
       toast.error(state.message);
     }
   }, [state]);
@@ -57,6 +57,8 @@ export default function Page() {
                 name="name"
                 type="text"
                 placeholder="Name of your Course"
+                required
+                minLength={3}
               />
               {state?.errors?.["name"]?.[0] && (
                 <p className="text-destructive">
@@ -78,7 +80,7 @@ export default function Page() {
             </div>
             <div className="flex flex-col gap-y-2">
               <Label>Price</Label>
-              <Input type="number" name="price" placeholder="19$" />
+              <Input type="number" name="price" placeholder="19$ " required min={1} />
               {state?.errors?.["price"]?.[0] && (
                 <p className="text-destructive">
                   {state?.errors?.["price"]?.[0]}
@@ -90,6 +92,8 @@ export default function Page() {
               <Textarea
                 name="smallDescription"
                 placeholder="Briefly summarize your course to captivate your audience."
+                required
+                minLength={10}
               />
               {state?.errors?.["smallDescription"]?.[0] && (
                 <p className="text-destructive">
@@ -101,7 +105,8 @@ export default function Page() {
               <input
                 type="hidden"
                 name="description"
-                value={JSON.stringify(json)}
+                value={JSON.stringify(json)
+                }
               />
               <Label>Description</Label>
               <TipTapEditor json={json} setJson={setJson} />
@@ -123,9 +128,10 @@ export default function Page() {
                 endpoint="imageUploader"
                 onClientUploadComplete={(res) => {
                   setImages(res.map((item) => item.url));
+                  toast.success("Your images have been uploaded!");
                 }}
                 onUploadError={(error: Error) => {
-                  throw new Error(`${error}`);
+                  toast.error("Something went wrong with images, try again");
                 }}
               />
               {state?.errors?.["images"]?.[0] && (
@@ -134,48 +140,34 @@ export default function Page() {
                 </p>
               )}
             </div>
-            {/* <div className="flex flex-col gap-y-2">
-              <input type="hidden" name="productFile" value={productfile ?? ""} />
+
+            <div className="flex flex-col gap-y-2">
+              <input
+                type="hidden"
+                name="courseFile"
+                value={courseFile ?? ""}
+              />
               <Label>Course File</Label>
               <UploadDropzone
                 className="ut-label:text-[#16A085] ut-button:bg-[#16A085]"
                 onClientUploadComplete={(res) => {
-                  setProductFile(res[0].url);
+                  SetCourseFile(res[0].url);
+                  toast.success("Your Course file has been uploaded!");
                 }}
-                endpoint="productFileUpload"
+                endpoint="courseFileUpload"
                 onUploadError={(error: Error) => {
-                  throw new Error(`${error}`);
+                  toast.error("Something went wrong with courseFile, try again");
                 }}
               />
-              {state?.errors?.["productFile"]?.[0] && (
+              {state?.errors?.["courseFile"]?.[0] && (
                 <p className="text-destructive">
-                  {state?.errors?.["productFile"]?.[0]}
+                  {state?.errors?.["courseFile"]?.[0]}
                 </p>
               )}
-            </div> */}
-            <div className="flex flex-col gap-y-2">
-          <input type="hidden" name="productFile" value={productFile ?? ""} />
-          <Label>Product File</Label>
-          <UploadDropzone
-          className="ut-label:text-[#16A085] ut-button:bg-[#16A085]"
-            onClientUploadComplete={(res) => {
-              SetProductFile(res[0].url);
-              toast.success("Your Product file has been uplaoded!");
-            }}
-            endpoint="productFileUpload"
-            onUploadError={(error: Error) => {
-              toast.error("Something went wrong, try again");
-            }}
-          />
-          {state?.errors?.["productFile"]?.[0] && (
-            <p className="text-destructive">
-              {state?.errors?.["productFile"]?.[0]}
-            </p>
-          )}
-        </div>
+            </div>
           </CardContent>
           <CardFooter className="mt-5">
-            <Button type="submit">Upload Course</Button>
+            <SubmitButton />
           </CardFooter>
         </form>
       </Card>
