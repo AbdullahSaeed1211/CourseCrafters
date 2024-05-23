@@ -25,8 +25,8 @@ export default function UserNav({ email, name, userImage }: iAppProps) {
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="relative h-10 w-10 rounded-full">
             <Avatar className="h-10 w-10">
-              <AvatarImage src={userImage} alt='user Image' />
-              <AvatarFallback>{name.slice(0,3)}</AvatarFallback>
+              <AvatarImage src={userImage} alt="user Image" />
+              <AvatarFallback>{name.slice(0, 3)}</AvatarFallback>
             </Avatar>
           </Button>
         </DropdownMenuTrigger>
@@ -41,8 +41,12 @@ export default function UserNav({ email, name, userImage }: iAppProps) {
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuItem asChild><Link href="/sell">Sell your Course</Link></DropdownMenuItem>
-            <DropdownMenuItem>Billing</DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="/sell">Sell your Course</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="/settings">Settings</Link>
+            </DropdownMenuItem>
             <DropdownMenuItem>Team</DropdownMenuItem>
             <DropdownMenuItem>Subscription</DropdownMenuItem>
           </DropdownMenuGroup>

@@ -11,6 +11,8 @@ export type State = {
     message?: string | null;
 
 }
+
+// course schema
 const courseSchema = z.object({
     name: z.string().min(3, { message: 'Name must be at least 3 characters long' }),
     category: z.string().min(1, { message: 'Category is required' }),
@@ -24,6 +26,22 @@ const courseSchema = z.object({
     courseFile: z
         .string()
         .min(1, { message: "Pleaes upload a zip of your course" }),
+
+})
+
+// User Settings schema   
+const userSettingsSchema = z.object({
+    firstName: z
+        .string()
+        .min(1, { message: 'Must contain atleast 3 characters' })
+        .or(z.literal(''))
+        .optional(),
+    lastName: z
+        .string().
+        min(1, { message: 'Last Name is required' })
+        .or(z.literal(''))
+        .optional()
+    ,
 
 })
 
@@ -64,7 +82,7 @@ export async function SellCourse(prevState: any, formData: FormData) {
             category: validateFields.data.category as CategoryTypes,
             price: validateFields.data.price,
             smallDescription: validateFields.data.smallDescription,
-            description: JSON.parse(validateFields.data.description), 
+            description: JSON.parse(validateFields.data.description),
             courseFile: validateFields.data.courseFile,
             images: validateFields.data.images,
             textColor: validateFields.data.textColor,
@@ -81,3 +99,40 @@ export async function SellCourse(prevState: any, formData: FormData) {
 
     return state;
 }
+
+
+//settings form
+
+export async function UpdateUserSettings(prevState:any,formData: FormData) {
+    const { getUser } = getKindeServerSession();
+    const user = await getUser();
+
+    if (!user) {
+        throw new Error('You must be logged in to update your settings');
+    }
+    const validateFields = userSettingsSchema.safeParse({
+        firstName: formData.get('firstName'),
+        lastName: formData.get('lastName'),
+    });
+    if(!validateFields.success){
+        const state: State = {
+            status: 'error',
+            errors: validateFields.error.flatten().fieldErrors,
+            message: 'Oops something went wrong with your inputs'
+        };
+        return state;
+    }
+    const data = await prisma.user.update({
+        where: { id: user.id },
+        data: {
+            firstName: validateFields.data.firstName,
+            lastName: validateFields.data.lastName,
+        }
+    });
+    const state:State ={
+        status: 'success',
+        message: 'Your settings have been successfully updated'
+    };
+    return state;
+}
+

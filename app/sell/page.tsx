@@ -20,6 +20,7 @@ import { useFormState } from "react-dom";
 import { SellCourse, State } from "../actions";
 import { toast } from "sonner";
 import SubmitButton from "../components/SubmitButton";
+import { redirect } from "next/navigation";
 
 export default function Page() {
   const initialState: State = {
@@ -31,10 +32,10 @@ export default function Page() {
   const [images, setImages] = useState<null | string[]>(null);
   const [courseFile, SetCourseFile] = useState<null | string>(null);
   console.log(state?.errors);
-
   useEffect(() => {
     if (state.status === "success") {
       toast.success(state.message);
+      redirect("/");
     } else if (state.status === "error") {
       toast.error(state.message);
     }
@@ -167,7 +168,7 @@ export default function Page() {
             </div>
           </CardContent>
           <CardFooter className="mt-5">
-            <SubmitButton />
+            <SubmitButton title="Create Course" />
           </CardFooter>
         </form>
       </Card>
