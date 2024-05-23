@@ -11,7 +11,7 @@ import { Toaster } from "@/components/ui/sonner";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "CourseCrafted",
+  title: "Launch Pages",
   description:
     "Empower Your Passion: Create Custom Pages to Sell Courses with Ease",
 };
