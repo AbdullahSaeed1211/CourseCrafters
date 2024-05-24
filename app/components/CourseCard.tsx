@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/carousel";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { Skeleton } from "@/components/ui/skeleton";
 interface iAppProps {
   images: string[];
   name: string;
@@ -55,6 +56,19 @@ export function CourseCard({
       <Button asChild className="mt-5 w-full">
         <Link href={`/course/${id}`}>Learn More !</Link>
       </Button>
+    </div>
+  );
+}
+
+export function LoadingCourseCard() {
+  return (
+    <div className="flex flex-col">
+      <Skeleton className="w-full h-[230px]" />
+      <div className="flex flex-col mt-2 gap-y-2">
+        <Skeleton className="w-full h-4" />
+        <Skeleton className="w-full h-6" />
+      </div>
+      <Skeleton className="w-full h-10  mt-5" />
     </div>
   );
 }

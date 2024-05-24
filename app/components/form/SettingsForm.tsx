@@ -8,11 +8,12 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import SubmitButton from "./SubmitButton";
 import { useFormState } from "react-dom";
-import { State, UpdateUserSettings } from "../actions";
+
 import { useEffect } from "react";
 import { toast } from "sonner";
+import {type State, UpdateUserSettings } from "@/app/actions";
+import SubmitButton from "../SubmitButton";
 
 interface iAppProps {
   firstName: string;
@@ -29,8 +30,7 @@ export function SettingsForm({ firstName, email, lastName }: iAppProps) {
   useEffect(() => {
     if (state?.status === "error") {
       toast.error(state.message);
-    }
-    else if (state?.status === "success") {
+    } else if (state?.status === "success") {
       toast.success(state.message);
     }
   }, [state]);

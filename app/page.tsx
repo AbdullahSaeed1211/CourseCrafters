@@ -1,3 +1,4 @@
+import { CourseRow } from "./components/CourseRow";
 import { NewestCourses } from "./components/NewestCourses";
 
 export default function Home() {
@@ -10,7 +11,12 @@ export default function Home() {
           pre-order or purchase links. No tech skills required.
         </p>
       </div>
-      <NewestCourses />
+      {/* <NewestCourses />
+       */}
+      <CourseRow category="newest" />
+      <CourseRow category="tech" />
+      <CourseRow category="business" />
+      <CourseRow category="creativearts" />
     </section>
   );
 }

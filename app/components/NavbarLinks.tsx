@@ -12,17 +12,17 @@ export const navbarLinks = [
   {
     id: 1,
     name: "Creative Arts",
-    href: "/courses",
+    href: "/courses/creativearts",
   },
   {
     id: 2,
     name: "Business",
-    href: "/about",
+    href: "/courses/business",
   },
   {
     id: 3,
     name: "Tech",
-    href: "/contact",
+    href: "/courses/tech",
   },
 ];
 
