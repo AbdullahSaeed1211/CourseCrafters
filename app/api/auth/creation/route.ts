@@ -18,19 +18,20 @@ export async function GET() {
     });
     // if user does not exist in db, create user
     if (!dbUser) {
-            // const account = await stripe.accounts.create({
-            //     email: user.email as string,
-            //     controller: {
-            //       losses: {
-            //         payments: "application",
-            //       },
-            //       fees: {
-            //         payer: "application",
-            //       },
-            //       stripe_dashboard: {
-            //         type: "express",
-            //       },
-            //     },
+        const account = await stripe.accounts.create({
+            email: user.email as string,
+            controller: {
+              losses: {
+                payments: "application",
+              },
+              fees: {
+                payer: "application",
+              },
+              stripe_dashboard: {
+                type: "express",
+              },
+            },
+          });
             // const account = await stripe.accounts.create({
             //     country: 'IN',
             //     controller: {
@@ -61,7 +62,7 @@ export async function GET() {
                 lastName: user.family_name ?? "",
                 email: user.email ?? "",
                 profileImage: user.picture ?? `https://avatar.vercel.sh/${user.given_name}`,
-                // connectedAccountId: account.id
+                connectedAccountId: account.id
 
             }
         });

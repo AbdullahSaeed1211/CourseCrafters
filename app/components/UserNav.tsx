@@ -48,8 +48,11 @@ export default function UserNav({ email, name, userImage }: iAppProps) {
               <Link href="/settings">Settings</Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link href="/my-courses">My Courses</Link></DropdownMenuItem>
-            <DropdownMenuItem>Subscription</DropdownMenuItem>
+              <Link href="/my-courses">My Courses</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link href="/billing">Billing</Link>
+            </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuItem asChild>

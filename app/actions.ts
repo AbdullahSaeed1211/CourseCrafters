@@ -78,7 +78,7 @@ export async function SellCourse(prevState: any, formData: FormData) {
     }
     console.log('Prisma Client:', prisma);
 
-    await prisma.course.create({
+    const data = await prisma.course.create({
         data: {
             name: validateFields.data.name,
             category: validateFields.data.category as CategoryTypes,
@@ -94,12 +94,13 @@ export async function SellCourse(prevState: any, formData: FormData) {
         }
     });
 
-    const state: State = {
-        status: 'success',
-        message: 'Course has been successfully uploaded'
-    };
+    // const state: State = {
+    //     status: 'success',
+    //     message: 'Course has been successfully uploaded'
+    // };
 
-    return state;
+    // return state;
+    return redirect(`/course/${user.id}`);
 }
 
 
@@ -143,37 +144,150 @@ export async function UpdateUserSettings(prevState: any, formData: FormData) {
 export async function BuyCourse(formData: FormData) {
     const id = formData.get('id') as string;
     const data = await prisma.course.findUnique(
+        //     {
+        //         where: { id },
+        //         select: {
+        //             name: true,
+        //             smallDescription: true,
+        //             price: true,
+        //             images: true,
+        //         }
+        //     }
+        // );
+        // const session = await stripe.checkout.sessions.create({
+        //     mode: 'payment',
+        //     line_items: [
+        //         {
+        //             price_data: {
+        //                 currency: 'usd',
+        //                 unit_amount: Math.round(data?.price as number * 100),
+        //                 product_data: {
+        //                     name: data?.name as string,
+        //                     description: data?.smallDescription,
+        //                     images: data?.images,
+        //                 }
+
+        //             },
+        //             quantity: 1,
+        //         },
+        //     ],
+        //     success_url: 'http://localhost:3000/payment/success',
+        //     cancel_url: 'http://localhost:3000/payment/cancel',
+
+        // });
         {
-            where: { id },
+            where: {
+                id: id,
+            },
             select: {
                 name: true,
                 smallDescription: true,
                 price: true,
                 images: true,
-            }
-        }
-    );
+                courseFile: true,
+                User: {
+                    select: {
+                        connectedAccountId: true,
+                    },
+                },
+            },
+        });
+
     const session = await stripe.checkout.sessions.create({
-        mode: 'payment',
+        mode: "payment",
         line_items: [
             {
                 price_data: {
-                    currency: 'usd',
-                    unit_amount: Math.round(data?.price as number * 100),
+                    currency: "usd",
+                    unit_amount: Math.round((data?.price as number) * 100),
                     product_data: {
                         name: data?.name as string,
                         description: data?.smallDescription,
                         images: data?.images,
-                    }
-
+                    },
                 },
                 quantity: 1,
             },
         ],
-        success_url: 'http://localhost:3000/payment/success',
-        cancel_url: 'http://localhost:3000/payment/cancel',
+        metadata: {
+            link: data?.courseFile as string,
+        },
 
+        payment_intent_data: {
+            application_fee_amount: Math.round((data?.price as number) * 100) * 0.1,
+            transfer_data: {
+                destination: data?.User?.connectedAccountId as string,
+            },
+        },
+        success_url:
+            process.env.NODE_ENV === "development"
+                ? "http://localhost:3000/payment/success"
+                : "https://localhost:3000/payment/success",
+        cancel_url:
+            process.env.NODE_ENV === "development"
+                ? "http://localhost:3000/payment/cancel"
+                : "https://localhost:3000/payment/cancel",
     });
-    
+
     return redirect(session.url as string);
+}
+
+export async function CreateStripeAccoutnLink() {
+    const { getUser } = getKindeServerSession();
+
+    const user = await getUser();
+
+    if (!user) {
+        throw new Error();
+    }
+
+    const data = await prisma.user.findUnique({
+        where: {
+            id: user.id,
+        },
+        select: {
+            connectedAccountId: true,
+        },
+    });
+
+    const accountLink = await stripe.accountLinks.create({
+        account: data?.connectedAccountId as string,
+        refresh_url:
+            process.env.NODE_ENV === "development"
+                ? `http://localhost:3000/billing`
+                : `http://localhost:3000/billing`,
+
+        return_url:
+            process.env.NODE_ENV === "development"
+                ? `http://localhost:3000/return/${data?.connectedAccountId}`
+                : `https://localhost:3000/return/${data?.connectedAccountId}`,
+        type: "account_onboarding",
+    });
+
+    return redirect(accountLink.url);
+}
+
+export async function GetStripeDashboardLink() {
+    const { getUser } = getKindeServerSession();
+
+    const user = await getUser();
+
+    if (!user) {
+        throw new Error();
+    }
+
+    const data = await prisma.user.findUnique({
+        where: {
+            id: user.id,
+        },
+        select: {
+            connectedAccountId: true,
+        },
+    });
+
+    const loginLink = await stripe.accounts.createLoginLink(
+        data?.connectedAccountId as string
+    );
+
+    return redirect(loginLink.url);
 }
