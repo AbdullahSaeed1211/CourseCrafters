@@ -22,7 +22,7 @@ import { TipTapEditor } from "../Editor";
 import SubmitButton from "../SubmitButton";
 
 
-export function SellForm() {
+export default function SellForm() {
   const initialState: State = {
     status: undefined,
     message: "",

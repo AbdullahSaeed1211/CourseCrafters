@@ -18,31 +18,42 @@ export async function GET() {
     });
     // if user does not exist in db, create user
     if (!dbUser) {
-        // const account = await stripe.accounts.create({
-        //     email: user.email as string,
-        //     country: 'IN',
-        //     controller: {
-        //         stripe_dashboard: {
-        //             type: 'none',
-        //         },
-        //         fees: {
-        //             payer: 'application',
-        //         },
-        //         losses: {
-        //             payments: 'application',
-        //         },
-        //         requirement_collection: 'application',
-        //     },
-        //     capabilities: {
-        //         transfers: {
-        //             requested: true,
-        //         },
-        //     },
-        //     tos_acceptance: {
-        //         service_agreement: 'recipient',
-
-        //     }
-        // });
+            // const account = await stripe.accounts.create({
+            //     email: user.email as string,
+            //     controller: {
+            //       losses: {
+            //         payments: "application",
+            //       },
+            //       fees: {
+            //         payer: "application",
+            //       },
+            //       stripe_dashboard: {
+            //         type: "express",
+            //       },
+            //     },
+            // const account = await stripe.accounts.create({
+            //     country: 'IN',
+            //     controller: {
+            //       stripe_dashboard: {
+            //         type: 'none',
+            //       },
+            //       fees: {
+            //         payer: 'application',
+            //       },
+            //       losses: {
+            //         payments: 'application',
+            //       },
+            //       requirement_collection: 'application',
+            //     },
+            //     capabilities: {
+            //       transfers: {
+            //         requested: true,
+            //       },
+            //     },
+            //     tos_acceptance: {
+            //       service_agreement: 'recipient',
+            //     },
+            //   });
         dbUser = await prisma.user.create({
             data: {
                 id: user.id,

@@ -4,7 +4,7 @@ import { useFormStatus } from "react-dom";
 import { LoaderCircle } from "lucide-react";
 import Link from "next/link";
 
-export function SubmitButton({ title }: { title: string }) {
+export default function SubmitButton({ title }: { title: string }) {
   const { pending } = useFormStatus();
   return (
     <>

@@ -1,7 +1,7 @@
 
 import { Card } from "@/components/ui/card";
-import { SellForm } from "../components/form/SellForm";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import SellForm from "../components/form/SellForm";
 
 
 export default async function Page() {
