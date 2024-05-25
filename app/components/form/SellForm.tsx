@@ -19,7 +19,7 @@ import { redirect } from "next/navigation";
 import SelectCategory from "../SelectCategory";
 import Theme from "../Theme";
 import { TipTapEditor } from "../Editor";
-import SubmitButton from '@/app/components/SubmitButton'
+import SubmitButton from "@/app/components/SubmitButton"
 
 
 export default function SellForm() {

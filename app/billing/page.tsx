@@ -9,7 +9,8 @@ import {
   import prisma from "../lib/db";
   import { Button } from "@/components/ui/button";
   import { CreateStripeAccoutnLink, GetStripeDashboardLink } from "../actions";
-  import { SubmitButton } from "@/app/components/SubmitButton";
+import SubmitButton from '@/app/components/SubmitButton'
+
   import { unstable_noStore as noStore } from "next/cache";
   
   async function getData(userId: string) {
