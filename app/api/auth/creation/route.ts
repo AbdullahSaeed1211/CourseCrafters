@@ -3,7 +3,9 @@ import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
 import prisma from "@/app/lib/db";
+import {unstable_noStore as noStore} from "next/cache";
 export async function GET() {
+    noStore();
     const { getUser } = getKindeServerSession();
     const user = await getUser();
     // check if user exists

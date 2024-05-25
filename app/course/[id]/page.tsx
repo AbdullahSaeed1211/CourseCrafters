@@ -2,7 +2,7 @@ import { BuyCourse } from "@/app/actions";
 import { CourseDescription } from "@/app/components/CourseDescription";
 import { BuyButton } from "@/app/components/SubmitButton";
 import prisma from "@/app/lib/db";
-import { Button } from "@/components/ui/button";
+import { unstable_noStore as noStore } from "next/cache";
 import {
   Carousel,
   CarouselContent,
@@ -43,6 +43,7 @@ export default async function Coursepage({
 }: {
   params: { id: string };
 }) {
+  noStore();
   const data = await getData(params.id);
   return (
     <section className="max-w-7xl mx-auto px-4 lg:px-8 lg:grid lg:grid-rows-1 lg:grid-cols-7 lg:gap-x-8 lg:gap-y-10 xl:gap-x-16">
