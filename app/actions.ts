@@ -3,6 +3,8 @@ import { z } from 'zod'
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
 import prisma from './lib/db'; // adjust the import path as necessary
 import { CategoryTypes } from '@prisma/client';
+import { stripe } from '@/lib/stripe';
+import { redirect } from 'next/navigation';
 export type State = {
     status: 'error' | 'success' | undefined;
     errors?: {
@@ -103,7 +105,7 @@ export async function SellCourse(prevState: any, formData: FormData) {
 
 //settings form
 
-export async function UpdateUserSettings(prevState:any,formData: FormData) {
+export async function UpdateUserSettings(prevState: any, formData: FormData) {
     const { getUser } = getKindeServerSession();
     const user = await getUser();
 
@@ -114,7 +116,7 @@ export async function UpdateUserSettings(prevState:any,formData: FormData) {
         firstName: formData.get('firstName'),
         lastName: formData.get('lastName'),
     });
-    if(!validateFields.success){
+    if (!validateFields.success) {
         const state: State = {
             status: 'error',
             errors: validateFields.error.flatten().fieldErrors,
@@ -129,10 +131,49 @@ export async function UpdateUserSettings(prevState:any,formData: FormData) {
             lastName: validateFields.data.lastName,
         }
     });
-    const state:State ={
+    const state: State = {
         status: 'success',
         message: 'Your settings have been successfully updated'
     };
     return state;
 }
 
+//stripe
+
+export async function BuyCourse(formData: FormData) {
+    const id = formData.get('id') as string;
+    const data = await prisma.course.findUnique(
+        {
+            where: { id },
+            select: {
+                name: true,
+                smallDescription: true,
+                price: true,
+                images: true,
+            }
+        }
+    );
+    const session = await stripe.checkout.sessions.create({
+        mode: 'payment',
+        line_items: [
+            {
+                price_data: {
+                    currency: 'usd',
+                    unit_amount: Math.round(data?.price as number * 100),
+                    product_data: {
+                        name: data?.name as string,
+                        description: data?.smallDescription,
+                        images: data?.images,
+                    }
+
+                },
+                quantity: 1,
+            },
+        ],
+        success_url: 'http://localhost:3000/payment/success',
+        cancel_url: 'http://localhost:3000/payment/cancel',
+
+    });
+    
+    return redirect(session.url as string);
+}
