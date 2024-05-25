@@ -222,11 +222,11 @@ export async function BuyCourse(formData: FormData) {
         success_url:
             process.env.NODE_ENV === "development"
                 ? "http://localhost:3000/payment/success"
-                : "https://localhost:3000/payment/success",
+                : "https://course-crafters.vercel.app/payment/success",
         cancel_url:
             process.env.NODE_ENV === "development"
                 ? "http://localhost:3000/payment/cancel"
-                : "https://localhost:3000/payment/cancel",
+                : "https://course-crafters.vercel.app/payment/cancel",
     });
 
     return redirect(session.url as string);
@@ -255,12 +255,12 @@ export async function CreateStripeAccoutnLink() {
         refresh_url:
             process.env.NODE_ENV === "development"
                 ? `http://localhost:3000/billing`
-                : `http://localhost:3000/billing`,
+                : `https://course-crafters.vercel.app/billing`,
 
         return_url:
             process.env.NODE_ENV === "development"
                 ? `http://localhost:3000/return/${data?.connectedAccountId}`
-                : `https://localhost:3000/return/${data?.connectedAccountId}`,
+                : `https://course-crafters.vercel.app/return/${data?.connectedAccountId}`,
         type: "account_onboarding",
     });
 
