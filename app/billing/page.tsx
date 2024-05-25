@@ -9,7 +9,7 @@ import {
   import prisma from "../lib/db";
   import { Button } from "@/components/ui/button";
   import { CreateStripeAccoutnLink, GetStripeDashboardLink } from "../actions";
-  import { Submitbutton } from "../components/SubmitButtons";
+  import { SubmitButton } from "@/app/components/SubmitButton";
   import { unstable_noStore as noStore } from "next/cache";
   
   async function getData(userId: string) {
@@ -47,13 +47,13 @@ import {
           <CardContent>
             {data?.stripeConnectedLinked === false && (
               <form action={CreateStripeAccoutnLink}>
-                <Submitbutton title="Link your Accout to stripe" />
+                <SubmitButton title="Link your Accout to stripe" />
               </form>
             )}
   
             {data?.stripeConnectedLinked === true && (
               <form action={GetStripeDashboardLink}>
-                <Submitbutton title="View Dashboard" />
+                <SubmitButton title="View Dashboard" />
               </form>
             )}
           </CardContent>
