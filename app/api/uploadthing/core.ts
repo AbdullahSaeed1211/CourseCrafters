@@ -29,7 +29,7 @@ export const ourFileRouter = {
       return { uploadedBy: metadata.userId };
     }),
 
-    courseFileUpload: f({ image: { maxFileSize: "8MB", maxFileCount: 1 }} )
+    courseFileUpload: f({'blob': {maxFileCount:1, maxFileSize:'8MB'}} )
     // Set permissions and file types for this FileRoute
     .middleware(async ({ req }) => {
       const { getUser } = getKindeServerSession();

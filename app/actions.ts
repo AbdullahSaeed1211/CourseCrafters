@@ -94,10 +94,7 @@ export async function SellCourse(prevState: any, formData: FormData) {
         }
     });
 
-    // const state: State = {
-    //     status: 'success',
-    //     message: 'Course has been successfully uploaded'
-    // };
+ 
 
     // return state;
     return redirect(`/course/${user.id}`);
@@ -144,37 +141,6 @@ export async function UpdateUserSettings(prevState: any, formData: FormData) {
 export async function BuyCourse(formData: FormData) {
     const id = formData.get('id') as string;
     const data = await prisma.course.findUnique(
-        //     {
-        //         where: { id },
-        //         select: {
-        //             name: true,
-        //             smallDescription: true,
-        //             price: true,
-        //             images: true,
-        //         }
-        //     }
-        // );
-        // const session = await stripe.checkout.sessions.create({
-        //     mode: 'payment',
-        //     line_items: [
-        //         {
-        //             price_data: {
-        //                 currency: 'usd',
-        //                 unit_amount: Math.round(data?.price as number * 100),
-        //                 product_data: {
-        //                     name: data?.name as string,
-        //                     description: data?.smallDescription,
-        //                     images: data?.images,
-        //                 }
-
-        //             },
-        //             quantity: 1,
-        //         },
-        //     ],
-        //     success_url: 'http://localhost:3000/payment/success',
-        //     cancel_url: 'http://localhost:3000/payment/cancel',
-
-        // });
         {
             where: {
                 id: id,
@@ -198,7 +164,7 @@ export async function BuyCourse(formData: FormData) {
         line_items: [
             {
                 price_data: {
-                    currency: "usd",
+                    currency: "inr",
                     unit_amount: Math.round((data?.price as number) * 100),
                     product_data: {
                         name: data?.name as string,
